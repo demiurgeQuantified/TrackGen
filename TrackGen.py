@@ -47,7 +47,7 @@ class TrackGen:
                 for _, _, files in os.walk(directory):
                     for file in files:
                         if file.endswith(".ogg"):
-                            filenames.append(directory + "/" + file)
+                            filenames.append(directory + "\\" + file)
             else:
                 print(f"Unrecognised path {directory}")
 
