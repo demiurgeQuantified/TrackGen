@@ -32,6 +32,10 @@ def generate_tracks(paths: list[Path]) -> str:
 
     files: list[Path] = []
     for path in paths:
+        if not path.exists():
+            print(f"{path} does not exist, skipping.")
+            continue
+
         if path.is_file():
             files.append(path)
         else:
