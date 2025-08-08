@@ -112,6 +112,10 @@ def main() -> None:
     with Path("TrackGen_en.txt").open("w", encoding="utf-8") as file:
         file.write(write_translations_file(tracks))
 
+    with Path("TrackGen_list.txt").open("w", encoding="utf-8") as file:
+        for track in tracks:
+            file.write(track.name + ",\n")
+
 
 if __name__ == '__main__':
     main()
