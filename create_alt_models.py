@@ -105,7 +105,15 @@ def main() -> None:
             flat_model.id = block.id + "_Flat"
             for k, v in block.values.items():
                 flat_model.values[k] = v
-            flat_model.values["mesh"] = "WorldItems/TCCover/TCCover_1"
+            flat_model.values["mesh"] = "WorldItems/TCCover_1"
+
+            attachment = Block()
+            attachment.type = "attachment"
+            attachment.id = "world"
+            attachment.values = {
+                "offset": "0 -0.02 0"
+            }
+            flat_model.blocks.append(attachment)
 
             out_module.blocks.append(flat_model)
 
