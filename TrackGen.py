@@ -1,4 +1,7 @@
-import sys, os
+import json
+import sys
+import os
+
 from pathlib import Path
 from dataclasses import dataclass
 
@@ -46,6 +49,11 @@ def create_track(path: Path) -> Track:
 
 
 def write_track_script(track: Track) -> str:
+    """
+    Deprecated pre-rewrite format.
+    :param track:
+    :return:
+    """
     return (f"track {track.name} {{\n"
             f"    sound = {track.sound},\n"
             f"    duration = {track.duration},\n"
@@ -54,12 +62,46 @@ def write_track_script(track: Track) -> str:
 
 
 def write_script_file(tracks: list[Track]) -> str:
+    """
+    Deprecated pre-rewrite format.
+    :param tracks:
+    :return:
+    """
     total_string = SCRIPT_HEADER
 
     for track in tracks:
         total_string += write_track_script(track)
 
     return total_string
+
+
+def write_tracks(tracks: list[Track]) -> dict:
+    track_map = {}
+    for track in tracks:
+        track_map[track.name] = {
+            "sound": track.sound,
+            "duration": track.duration
+        }
+
+    return track_map
+
+
+def write_track_group(tracks: list[Track]) -> list:
+    return list({"track": track.name, "weight": 1} for track in tracks)
+
+
+def write_json(path: Path, tracks: list[Track]) -> None:
+    with path.open('w', encoding="utf-8") as file:
+        json.dump(
+            {
+                "tracks": write_tracks(tracks),
+                "trackGroups": {
+                    "TrackGen_Tracks": write_track_group(tracks)
+                }
+            },
+            file,
+            indent=4
+        )
 
 
 def write_translations_file(tracks: list[Track]) -> str:
@@ -105,9 +147,7 @@ def main() -> None:
 
     tracks = create_tracks(paths)
 
-    # TODO: switch to change output name
-    with Path("TrackGen_tracks.txt").open("w", encoding="utf-8") as file:
-        file.write(write_script_file(tracks))
+    write_json(Path("TrackGen_tracks.json"), tracks)
 
     with Path("TrackGen_en.txt").open("w", encoding="utf-8") as file:
         file.write(write_translations_file(tracks))
